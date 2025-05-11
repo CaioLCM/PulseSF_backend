@@ -1,8 +1,8 @@
-import express, {Request, Response} from 'express';
+import express from 'express';
 import router from './API/routes';
-import MainServer from './API/server';
+import "dotenv/config"
 
 const app = express();
 
-app.use(MainServer);
 app.use(router);
+app.listen(process.env.PORT, () => {console.log("Server on!")})

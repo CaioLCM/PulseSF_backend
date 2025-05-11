@@ -1,7 +1,7 @@
-import express, {Request, Response} from "express"
-const router = express.Router();
+import {Router, Request, Response} from "express"
+const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
+router.post('/', (req: Request, res: Response) => {
     res.status(200).send("Hello world!")
 })
 
