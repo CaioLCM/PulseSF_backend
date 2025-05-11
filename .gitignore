@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+*.log
+
+# Diretórios de build
+/dist/
+/build/
+/out/
+/public/
+
+# Diretórios de configuração local
+/.env
+.env.local
+.env.*.local
+
+# Arquivos de sistema
+.DS_Store            
+Thumbs.db            
+
+# IDEs e editores
+.vscode/
+.idea/
+
+# Arquivos de backup
+*.bak
+*.swp
+
+# Arquivos do TypeScript
+*.tsbuildinfo
