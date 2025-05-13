@@ -1,13 +1,15 @@
 import moongose from 'mongoose';
-
-const uri = "mongodb+srv://caiolenemagalhaes:caio123@cluster0.tsksbk0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+import 'dotenv/config'
 
 const connectDB = async () => {
     try{
-        await moongose.connect(uri);
+        await moongose.connect(process.env.MONGODB_URI!);
         console.log("Success!");
     } catch(error) {
         console.error("Error!", error);
     }
 }
+
 connectDB()
+
+export default connectDB;
