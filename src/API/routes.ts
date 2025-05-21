@@ -4,6 +4,7 @@ import connectDB from "../data/config";
 import user from "../data/model";
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
+import { profile } from "console";
 
 router.post('/logon', async (req: Request, res: Response) => {
     connectDB();
@@ -31,7 +32,7 @@ router.post('/login',  async (req: Request, res: Response) => {
     const check = await user.findOne({'email': email, 'password': password});
     if (check){
         const token = jwt.sign(
-            {user: {email: check.email, nickname: check.username}},
+            {user: {email: check.email, nickname: check.username, profilePicture: check.profilePicture}},
             process.env.JWT_SECRET!,
             {expiresIn: '1h'}
         )
@@ -40,13 +41,34 @@ router.post('/login',  async (req: Request, res: Response) => {
                 token,
                 user: {
                     email: email,
-                    name: check.username
+                    name: check.username,
+                    profile_picture: check.profilePicture
                 }
             }
         );
     }
+    
     else {
         res.status(400).send("Account does not exists!");
+    }
+})
+
+
+router.post("/profileAdd", async (req, res) => {
+    connectDB();
+    const {email, image} = req.body
+    const check = await user.updateOne({
+        email: email
+    }, {
+        $set: {profilePicture: image}
+    },
+    {new: 
+        true})
+    if (check){
+        res.status(200).json({message: "Success!"})
+    }
+    else {
+        res.status(400).json({message: "Error!"})
     }
 })
 
