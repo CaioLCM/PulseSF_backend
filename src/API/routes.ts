@@ -1,7 +1,8 @@
 import {Router, Request, Response} from "express"
 const router = Router();
 import connectDB from "../data/config";
-import user from "../data/model";
+import model from "../data/model";
+const {user, project} = model;
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 import { profile } from "console";
@@ -16,7 +17,7 @@ router.post('/logon', async (req: Request, res: Response) => {
         }
         else {
             const usercreated = new user({username: username, email: email, password: password});
-            usercreated.save();
+            await usercreated.save();
             res.status(200).send("Created with success!");
         }
 
@@ -70,6 +71,15 @@ router.post("/profileAdd", async (req, res) => {
     else {
         res.status(400).json({message: "Error!"})
     }
+})
+
+router.post("/projectCreate", async (req, res) => {
+    connectDB();
+    let {email, title, bio, members} = req.body;
+    members = parseFloat(members);
+    const projectCreated = await new project({projectName: title, projectBio: bio, projectNumberOfMembers: members, emailOwner: email})
+    await projectCreated.save();
+    res.status(200).send("Created with success!")
 })
 
 export default router;
