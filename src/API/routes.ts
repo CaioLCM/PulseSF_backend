@@ -82,4 +82,10 @@ router.post("/projectCreate", async (req, res) => {
     res.status(200).send("Created with success!")
 })
 
+router.get("/projects", async (req, res) => {
+    connectDB();
+    const projects = await project.find();
+    res.status(200).json(projects);
+})
+
 export default router;
