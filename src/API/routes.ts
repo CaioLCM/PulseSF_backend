@@ -88,4 +88,10 @@ router.get("/projects", async (req, res) => {
     res.status(200).json(projects);
 })
 
+router.post("/removeProject", async (req, res) => {
+    connectDB();
+    await project.deleteOne({"projectName": req.body["name"]})
+    res.send(200).json({message: "OK"})
+})
+
 export default router;
