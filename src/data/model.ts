@@ -13,6 +13,7 @@ const projectSchema = new mongoose.Schema({
     projectBio: {type: String, required: true},
     projectNumberOfMembers: {type: Number, required: true},
     emailOwner: {type: String, required: true},
+    member_list: [{type: String}]
 })
 
 const user = mongoose.model('User', userSchema);
