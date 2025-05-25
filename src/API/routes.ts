@@ -6,6 +6,7 @@ const {user, project} = model;
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'
 import { profile } from "console";
+import { connect } from "http2";
 
 router.post('/logon', async (req: Request, res: Response) => {
     connectDB();
@@ -92,6 +93,30 @@ router.post("/removeProject", async (req, res) => {
     connectDB();
     await project.deleteOne({"projectName": req.body["name"]})
     res.send(200).json({message: "OK"})
+})
+
+router.post("/searchPicture", async (req, res) => {
+    connectDB();
+    const picture = await user.findOne({"email": req.body["email"]})
+    res.status(200).json({"picture": picture!["profilePicture"]})
+})
+
+router.post("/addMember", async(req, res) => {
+    connectDB();
+    const [ID, email, image] = req.body
+     const check = await project.updateOne({
+        _id: ID
+    }, {
+        $set: {profilePicture: image}
+    },
+    {new: 
+        true})
+    if (check){
+        res.status(200).json({message: "Success!"})
+    }
+    else {
+        res.status(400).json({message: "Error!"})
+    }
 })
 
 export default router;

@@ -12,7 +12,7 @@ const projectSchema = new mongoose.Schema({
     projectName: {type: String, required: true},
     projectBio: {type: String, required: true},
     projectNumberOfMembers: {type: Number, required: true},
-    emailOwner: {type: String, required: true}
+    emailOwner: {type: String, required: true},
 })
 
 const user = mongoose.model('User', userSchema);
