@@ -8,6 +8,8 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { profile } from "console";
 import { connect } from "http2";
+import { json } from "stream/consumers";
+import { strict } from "assert";
 
 router.post("/logon", async (req: Request, res: Response) => {
   connectDB();
@@ -138,5 +140,18 @@ router.post("/addMember", async (req: Request, res: Response): Promise<any> => {
   }
 
 });
+
+router.get("/searchUsers", async (req, res) => {
+  connectDB()
+  const check = await user.find({});
+  const users_info: { email: string; profile_picture: string }[] = [];
+  check.map((pr) => users_info.push({ email: pr["email"], profile_picture: pr["profilePicture"] != null? pr["profilePicture"] : "No profile picture" }));
+  res.status(200)
+  .json(
+    {
+      users_info
+    }
+  )
+})
 
 export default router;
