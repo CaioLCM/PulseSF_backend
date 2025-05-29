@@ -154,4 +154,22 @@ router.get("/searchUsers", async (req, res) => {
   )
 })
 
+router.post("/searchUser", async (req, res) => {
+  console.log("Search user working!!!")
+  connectDB()
+  console.log(req.body['email'])
+  const check = await user.findOne({
+    email: req.body['email']
+  })
+  if (check) {
+    const bio = check.get("bio") == null ? "Add your info here!!!" : check.get("bio")
+    res.status(200).json({
+      "bio": bio 
+    });
+  } else {
+    console.log("User not found");
+    res.status(400);
+  }
+})
+
 export default router;
