@@ -172,4 +172,22 @@ router.post("/searchUser", async (req, res) => {
   }
 })
 
+router.post("/updateBio", async (req, res) => {
+  connectDB()
+  const {email, bio} = req.body;
+  console.log(email);
+  console.log(bio);
+  const check = await user.updateOne({
+    email: email
+},
+
+{
+  $set: {bio: bio}
+},
+{new: true}
+  );
+  console.log(check.matchedCount)
+  res.status(200).json({ message: "Bio updated!" });
+});
+
 export default router;

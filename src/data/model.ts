@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     createdAt: {type: Date, default: Date.now},
-    profilePicture: {type: String, required: false}
+    profilePicture: {type: String, required: false, default: "No profile picture"},
+    bio: {type: String, required: false, default: ""}
 })
 
 const projectSchema = new mongoose.Schema({
