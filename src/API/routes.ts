@@ -310,11 +310,32 @@ router.post("/acceptFriendRequest", async (req, res) => {
 
 router.post("/searchFriends", async (req, res) => {
   console.log("chegou aqui")
-  const { email } = req.body;
-  const foundUser = await user.findOne({ email });
-  // You can now use foundUser to return friends or any other info
+  const { email_user } = req.body;
+  const foundUser = await user.findOne({ email: email_user });
+  console.log("Amigos")
   console.log(foundUser?.friends)
   res.status(200).json({ friends: foundUser?.friends ?? [] });
+})
+
+router.post("/removeFriend", async (req: Request, res: Response) => {
+  const {email_req, email_res} = req.body;
+  const foundUser1 = await user.findOne({email: email_req});
+  const user1_friends = foundUser1?.friends;
+  user1_friends?.splice(user1_friends.indexOf(email_res), 1);
+  await user.findOneAndUpdate({
+    email: email_req
+  }, {
+    friends: user1_friends
+  })
+
+  const foundUser2 = await user.findOne({email: email_res});
+  const user2_friends = foundUser2?.friends;
+  user2_friends?.splice(user2_friends.indexOf(email_req), 1);
+  await user.findOneAndUpdate(
+    {email: email_res},
+    {friends: user2_friends}
+  )
+  res.status(200).end();
 })
 
 /////////////////////////////////////////////////////////////////////////////////////
