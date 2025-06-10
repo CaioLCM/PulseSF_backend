@@ -10,6 +10,7 @@ import { profile } from "console";
 import { connect } from "http2";
 import { json } from "stream/consumers";
 import { strict } from "assert";
+import { getMessages } from "../controller/messageController";
 
 connectDB();
 
@@ -337,6 +338,8 @@ router.post("/removeFriend", async (req: Request, res: Response) => {
   )
   res.status(200).end();
 })
+
+router.get("/messages", getMessages);
 
 /////////////////////////////////////////////////////////////////////////////////////
 

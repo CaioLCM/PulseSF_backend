@@ -20,15 +20,15 @@ const projectSchema = new mongoose.Schema({
     member_list: [{type: String}]
 })
 
-const message = new mongoose.Schema({
-    "_id": {type: String, required: true},
+const messageSchema = new mongoose.Schema({
     "senderEmail": {type: String, required: true},
-    "receiverEmail": {type: String, required: true},
+    "receiverEmail": {type: String},
     "text": {type: String, required: true},
     "timestamp": {type: Date, default: Date.now}
 })
 
 const user = mongoose.model('User', userSchema);
 const project = mongoose.model('Project', projectSchema);
+const message = mongoose.model('Message', messageSchema);
 
-export default {user, project};
+export default {user, project, message};
