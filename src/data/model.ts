@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const userSchema = new mongoose.Schema({
     username: {type: String, required: true},
     email: {type: String, required: true, unique: true},
@@ -17,6 +18,14 @@ const projectSchema = new mongoose.Schema({
     projectNumberOfMembers: {type: Number, required: true},
     emailOwner: {type: String, required: true},
     member_list: [{type: String}]
+})
+
+const message = new mongoose.Schema({
+    "_id": {type: String, required: true},
+    "senderEmail": {type: String, required: true},
+    "receiverEmail": {type: String, required: true},
+    "text": {type: String, required: true},
+    "timestamp": {type: Date, default: Date.now}
 })
 
 const user = mongoose.model('User', userSchema);
