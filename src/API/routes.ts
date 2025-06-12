@@ -353,9 +353,13 @@ router.post("/addEvent", async (req, res) => {
     }
   )
   await new_event.save();
-  res.send(200).end()
+  res.status(200).end()
 })
 
+router.get("/getEvents", async (req: Request, res: Response) => {
+  const events = await event.find({})
+  res.status(200).json(events);
+})
 /////////////////////////////////////////////////////////////////////////////////////
 
 export default router;
