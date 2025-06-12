@@ -360,6 +360,54 @@ router.get("/getEvents", async (req: Request, res: Response) => {
   const events = await event.find({})
   res.status(200).json(events);
 })
+
+router.post("/UpVote", async (req, res) => {
+  const {email, title} = req.body
+  const Event = await event.find({
+    title: title
+  })
+  const last_upVotes = Event[0]["upvotes"]
+  if (last_upVotes.indexOf(email) == -1){
+    last_upVotes.push(email)
+      await event.findOneAndUpdate(
+    { title: title },
+    { upvotes: last_upVotes }
+  )
+  res.status(200).json({"message": "Upvote added with success!"})
+  }
+  else{
+    last_upVotes.splice(last_upVotes.indexOf(email), 1)
+    await event.findOneAndUpdate(
+    { title: title },
+    { upvotes: last_upVotes }
+  )
+    res.status(200).json({"message": "Upvote deleted with success!"})
+  }
+})
+
+router.post("/DownVote", async(req, res) => {
+   const {email, title} = req.body
+  const Event = await event.find({
+    title: title
+  })
+  const last_downVotes = Event[0]["downvotes"]
+  if (last_downVotes.indexOf(email) == -1){
+    last_downVotes.push(email)
+      await event.findOneAndUpdate(
+    { title: title },
+    { downvotes: last_downVotes }
+  )
+  res.status(200).json({"message": "Downvote added with success!"})
+  }
+  else{
+    last_downVotes.splice(last_downVotes.indexOf(email), 1)
+    await event.findOneAndUpdate(
+    { title: title },
+    { downvotes: last_downVotes }
+  )
+    res.status(200).json({"message": "Downvote deleted with success!"})
+  }
+})
 /////////////////////////////////////////////////////////////////////////////////////
 
 export default router;

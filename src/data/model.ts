@@ -32,7 +32,8 @@ const eventSchema = new mongoose.Schema({
     "title": {type: String, required: true},
     "description": {type: String, required: true},
     "timestamp": {type: String, required: true},
-    "Votes": {type: String},
+    "upvotes": [{type: String}],
+    "downvotes": [{type: String}]
 })
 
 const user = mongoose.model('User', userSchema);
