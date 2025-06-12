@@ -4,6 +4,7 @@ import connectDB from "../data/config";
 import model from "../data/model";
 const user = model.user;
 const project = model.project;
+const event = model.event;
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { profile } from "console";
@@ -340,6 +341,20 @@ router.post("/removeFriend", async (req: Request, res: Response) => {
 })
 
 router.get("/messages", getMessages);
+
+router.post("/addEvent", async (req, res) => {
+  const {email_req, title, description, Date} = req.body
+  const new_event = new event(
+    {
+      title: title,
+      description: description,
+      creatorEmail: email_req,
+      timestamp: Date
+    }
+  )
+  await new_event.save();
+  res.send(200).end()
+})
 
 /////////////////////////////////////////////////////////////////////////////////////
 

@@ -27,8 +27,17 @@ const messageSchema = new mongoose.Schema({
     "timestamp": {type: Date, default: Date.now}
 })
 
+const eventSchema = new mongoose.Schema({
+    "creatorEmail": {type: String, required: true},
+    "title": {type: String, required: true},
+    "description": {type: String, required: true},
+    "timestamp": {type: String, required: true},
+    "Votes": {type: String},
+})
+
 const user = mongoose.model('User', userSchema);
 const project = mongoose.model('Project', projectSchema);
 const message = mongoose.model('Message', messageSchema);
+const event = mongoose.model("Event", eventSchema);
 
-export default {user, project, message};
+export default {user, project, message, event};
