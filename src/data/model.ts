@@ -29,7 +29,7 @@ const messageSchema = new mongoose.Schema({
 
 const eventSchema = new mongoose.Schema({
     "creatorEmail": {type: String, required: true},
-    "title": {type: String, required: true},
+    "title": {type: String, required: true, unique: true},
     "description": {type: String, required: true},
     "timestamp": {type: String, required: true},
     "upvotes": [{type: String}],

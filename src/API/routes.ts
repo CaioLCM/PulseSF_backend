@@ -408,6 +408,15 @@ router.post("/DownVote", async(req, res) => {
     res.status(200).json({"message": "Downvote deleted with success!"})
   }
 })
+
+router.post("/removeEvent", async (req, res) => {
+
+    const {title} = req.body;
+    await event.findOneAndDelete(
+      { title: title }
+    )
+    res.status(200).end()
+})
 /////////////////////////////////////////////////////////////////////////////////////
 
 export default router;
