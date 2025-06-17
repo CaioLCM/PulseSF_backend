@@ -107,6 +107,21 @@ router.post("/removeProject", async (req: Request, res: Response) => {
   res.status(200).json({ message: "OK" });
 });
 
+router.post("/removeUser", async (req: Request, res: Response) => {
+  const {email, project_name} = req.body;
+  const projects = await project.findOne({projectName: project_name})
+  if (email == projects?.emailOwner){
+    await project.deleteOne({ projectName: project_name });
+    res.status(200).json({ message: "OK" });
+  }
+  else {
+    const members = projects?.member_list
+    members?.splice(members.indexOf(email), 1)
+    await project.findOneAndUpdate({projectName: project_name}, {member_list: members})
+    res.status(200).end()
+  }
+})
+
 router.post("/searchPicture", async (req: Request, res: Response) => {
   const picture = await user.findOne({ email: req.body["email"] });
   res.status(200).json({ picture: picture!["profilePicture"] });
