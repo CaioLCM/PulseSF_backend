@@ -11,7 +11,7 @@ import { profile } from "console";
 import { connect } from "http2";
 import { json } from "stream/consumers";
 import { strict } from "assert";
-import { getMessages } from "../controller/messageController";
+import { getGlobalMessages } from "../controller/messageController";
 
 connectDB();
 
@@ -123,6 +123,8 @@ router.post("/removeUser", async (req: Request, res: Response) => {
 })
 
 router.post("/searchPicture", async (req: Request, res: Response) => {
+  const {email} = req.body;
+  console.log(email)
   const picture = await user.findOne({ email: req.body["email"] });
   res.status(200).json({ picture: picture!["profilePicture"] });
 });
@@ -154,7 +156,7 @@ router.post("/addMember", async (req: Request, res: Response): Promise<any> => {
 
 router.get("/searchUsers", async (req, res) => {
   const check = await user.find({});
-  const users_info: { email: string; profile_picture: string }[] = [];
+  const users_info: { email: string; profile_picture: string, friends: String[] }[] = [];
   check.map((pr) =>
     users_info.push({
       email: pr["email"],
@@ -162,6 +164,7 @@ router.get("/searchUsers", async (req, res) => {
         pr["profilePicture"] != null
           ? pr["profilePicture"]
           : "No profile picture",
+      friends: pr["friends"]
     })
   );
   res.status(200).json({
@@ -355,7 +358,7 @@ router.post("/removeFriend", async (req: Request, res: Response) => {
   res.status(200).end();
 })
 
-router.get("/messages", getMessages);
+router.get("/Globalmessages", getGlobalMessages);
 
 router.post("/addEvent", async (req, res) => {
   const {email_req, title, description, Date} = req.body
@@ -432,6 +435,35 @@ router.post("/removeEvent", async (req, res) => {
     )
     res.status(200).end()
 })
+
+router.post("/loadToDoList", async (req, res) => {
+  const {email} = req.body;
+  const user_account = await user.findOne({
+    email: email
+  })
+  res.status(200).send(user_account?.todolist)
+})
+
+router.post("/updateToDoList", async (req, res) => {
+  const {email, title} = req.body;
+  const toDo_list = []
+  const user_account = await user.findOne({
+    email: email
+  })
+  if (user_account?.todolist && user_account.todolist.length > 0){
+    toDo_list.push(...user_account.todolist)
+  }
+
+  toDo_list.push(title)
+  await user.findOneAndUpdate({
+    email: email
+  },
+  {
+    todolist: toDo_list
+  })
+  res.status(200).end()
+})
+
 /////////////////////////////////////////////////////////////////////////////////////
 
 export default router;

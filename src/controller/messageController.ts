@@ -3,7 +3,7 @@ import model from "../data/model"
 
 const message = model.message;
 
-export const getMessages = async (req: Request, res: Response) => {
+export const getGlobalMessages = async (req: Request, res: Response) => {
     try{
         const messages = await message.find({}).sort({timestamp: 1});
         res.status(200).json(messages);
@@ -11,4 +11,3 @@ export const getMessages = async (req: Request, res: Response) => {
         res.status(500).json({error: "Error to search mensages"});
     }
 } 
-

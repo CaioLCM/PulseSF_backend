@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     profilePicture: {type: String, required: false, default: "No profile picture"},
     bio: {type: String, required: false, default: ""},
     friends: [{type: String}],
-    add_request: [{type: String}]
+    add_request: [{type: String}],
+    todolist: [{type: String}]
 })
 
 const projectSchema = new mongoose.Schema({
