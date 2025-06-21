@@ -10,7 +10,12 @@ const userSchema = new mongoose.Schema({
     bio: {type: String, required: false, default: ""},
     friends: [{type: String}],
     add_request: [{type: String}],
-    todolist: [{type: String}]
+    todolist: [
+        {
+            title: {type: String, required: true},
+            checked: {type: Boolean, default: false}
+        }
+    ]
 })
 
 const projectSchema = new mongoose.Schema({

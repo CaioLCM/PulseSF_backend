@@ -454,7 +454,7 @@ router.post("/updateToDoList", async (req, res) => {
     toDo_list.push(...user_account.todolist)
   }
 
-  toDo_list.push(title)
+  toDo_list.push({title: title, checked: false})
   await user.findOneAndUpdate({
     email: email
   },
@@ -463,6 +463,48 @@ router.post("/updateToDoList", async (req, res) => {
   })
   res.status(200).end()
 })
+
+router.post("/updateCheckState", async (req: Request, res: Response) => {
+  const {email, title} = req.body;
+  const toDo_list: { title: string; checked: boolean }[] = [];
+  const user_account = await user.findOne({
+    email: email
+  });
+  if (user_account?.todolist) {
+    toDo_list.push(...user_account.todolist.map((item: any) => ({ title: item.title, checked: item.checked })));
+  }
+  toDo_list.forEach((E) => {
+    
+    if (E["title"] == title) {
+      E["checked"] = !E["checked"];
+    }
+  });
+  await user.findOneAndUpdate({
+    email: email
+  }, {
+    todolist: toDo_list
+  })
+})
+
+router.post("/removeToDoItem", async (req: Request, res: Response) => {
+  const {email, title} = req.body
+  const user_account = await user.findOne({
+    email: email
+  })
+  const toDo_list: { title: string; checked: boolean }[] = [];
+  if (user_account && user_account.todolist) {
+    toDo_list.push(...user_account.todolist.map((item: any) => ({ title: item.title, checked: item.checked })));
+  }
+  const index = toDo_list.findIndex((E) => E.title === title);
+  if (index !== -1) {
+    toDo_list.splice(index, 1);
+  }
+  await user.findOneAndUpdate(
+    { email: email },
+    { todolist: toDo_list }
+  );
+  res.status(200).end();
+});
 
 /////////////////////////////////////////////////////////////////////////////////////
 
