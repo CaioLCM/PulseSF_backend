@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, response } from "express";
 const router = Router();
 import connectDB from "../data/config";
 import model from "../data/model";
@@ -506,6 +506,59 @@ router.post("/removeToDoItem", async (req: Request, res: Response) => {
   res.status(200).end();
 });
 
+router.post("/createTag", async (req, res) => {
+  const {email, title, color} = req.body
+  const user_account = await user.findOne({
+    email: email
+  })
+  const tag_list: {tagname: String, color: String}[] = []
+    if (user_account && user_account.tags) {
+    tag_list.push(...user_account.tags.map((item: any) => ({ tagname: item.tagname, color: item.color })));
+  }
+  tag_list.push({"tagname": title, "color": color})
+  await user.findOneAndUpdate({
+    email: email
+  },
+  {
+    tags: tag_list
+  }
+)
+res.status(200).end()
+})
+
+router.post("/loadTags", async (req: Request, res: Response) => {
+  const {email} = req.body
+  const user_account = await user.findOne({
+    email: email
+  })
+  const tag_list: {tagname: String, color: String}[] = []
+  if (user_account && user_account.tags) {
+    tag_list.push(...user_account.tags.map((item: any) => ({ tagname: item.tagname, color: item.color })));
+  }
+  res.status(200).send(tag_list)
+})
+
+router.post("/addTagToToDoEvent", async (req: Request, res: Response) => {
+  const {email, title, tagName, color} = req.body
+  const info = await user.findOne({
+    email: email
+  })
+
+  const event = info?.todolist.find((item: any) => item.title === title)
+  console.log(event?.tag);
+  if (event) {
+    event.tag.splice(0, 1);
+    event.tag.push({tagname: tagName, color: color});
+  }
+  
+  if (!info?.username){
+    info!.username = "Default"
+  }
+
+  info?.save()
+
+  res.status(200).end()
+})
 /////////////////////////////////////////////////////////////////////////////////////
 
 export default router;
