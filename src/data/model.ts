@@ -14,15 +14,15 @@ const userSchema = new mongoose.Schema({
   friends: [{ type: String }],
   add_request: [{ type: String }],
   tags: [
-  {
-    tagname: { type: String, required: true },
-    color: { type: String, required: true },
-  }
-    ],
+    {
+      tagname: { type: String, required: true },
+      color: { type: String, required: true },
+    },
+  ],
   todolist: [
     {
       title: { type: String, required: true },
-      checked: { type: Boolean, default: false },
+      checked: { type: Boolean, default: false },   
       tag: [{ tagname: { type: String }, color: { type: String } }],
     },
   ],

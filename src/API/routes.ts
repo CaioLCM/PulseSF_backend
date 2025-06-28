@@ -7,7 +7,7 @@ const project = model.project;
 const event = model.event;
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { profile } from "console";
+import { profile, timeStamp } from "console";
 import { connect } from "http2";
 import { json } from "stream/consumers";
 import { strict } from "assert";
@@ -545,12 +545,13 @@ router.post("/addTagToToDoEvent", async (req: Request, res: Response) => {
   })
 
   const event = info?.todolist.find((item: any) => item.title === title)
-  console.log(event?.tag);
   if (event) {
     event.tag.splice(0, 1);
-    event.tag.push({tagname: tagName, color: color});
+    if (tagName != null && tagName != "None"){
+      event.tag.push({tagname: tagName, color: color});
+    }
   }
-  
+
   if (!info?.username){
     info!.username = "Default"
   }
@@ -559,6 +560,46 @@ router.post("/addTagToToDoEvent", async (req: Request, res: Response) => {
 
   res.status(200).end()
 })
+
+router.post("/send-private-message", async (req: Request, res: Response) => {
+  const { senderEmail, receiverEmail, text } = req.body;
+  if (!senderEmail || !receiverEmail || !text) {
+    res.status(400).json({ message: "Missing required fields." });
+    return;
+  }
+
+  try {
+    const newMessage = new model.message({
+      senderEmail,
+      receiverEmail,
+      text,
+    });
+    await newMessage.save();
+    res.status(201).json(newMessage);
+  } catch (error) {
+    res.status(500).send({ message: "Error sending message", error });
+  }
+});
+
+router.post("/get-private-messages", async (req: Request, res: Response) => {
+  const {user1Email, user2Email} = req.body;
+  if (!user1Email || !user2Email){
+    res.status(400).json({message: "Missing user emails"});
+    return;
+  }
+
+  try {
+    const messages = await model.message.find({
+      $or: [
+        {senderEmail: user1Email, receiverEmail: user2Email},
+        {senderEmail: user2Email, receiverEmail: user1Email}
+      ]
+    }).sort({timeStamp: 'asc'});
+    res.status(200).json(messages);
+  } catch (error){
+    res.status(500).json({message: "Error fetching messages", error});
+  }
+});
 /////////////////////////////////////////////////////////////////////////////////////
 
 export default router;
