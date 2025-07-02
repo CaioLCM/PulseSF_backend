@@ -26,6 +26,7 @@ const userSchema = new mongoose.Schema({
       tag: [{ tagname: { type: String }, color: { type: String } }],
     },
   ],
+  points: {type: Number, default: 0},
 });
 
 const projectSchema = new mongoose.Schema({
@@ -51,6 +52,8 @@ const eventSchema = new mongoose.Schema({
   upvotes: [{ type: String }],
   downvotes: [{ type: String }],
 });
+
+
 
 const user = mongoose.model("User", userSchema);
 const project = mongoose.model("Project", projectSchema);

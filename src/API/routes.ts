@@ -600,6 +600,35 @@ router.post("/get-private-messages", async (req: Request, res: Response) => {
     res.status(500).json({message: "Error fetching messages", error});
   }
 });
+
+router.post("/addPoints", async (req: Request, res: Response) => {
+  const {email, points} = req.body;
+  const user_account = await user.findOne({
+    email: email
+  });
+  if (user_account) {
+    const newPoints = (user_account.points || 0) + points;
+    await user.findOneAndUpdate(
+      { email: email },
+      { points: newPoints }
+    );
+    res.status(200).json({ message: "Points added successfully!" });
+  } else {
+    res.status(404).json({ message: "User not found!" });
+  }
+});
+
+router.get("/getPoints", async (req: Request, res: Response) => {
+  const {email} = req.body;
+  const user_account = await user.findOne({
+    email: email
+  });
+  if (user_account) {
+    res.status(200).json({ points: user_account.points || 0 });
+  } else {
+    res.status(404).json({ message: "User not found!" });
+  }
+});
 /////////////////////////////////////////////////////////////////////////////////////
 
 export default router;
