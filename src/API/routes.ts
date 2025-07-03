@@ -602,6 +602,7 @@ router.post("/get-private-messages", async (req: Request, res: Response) => {
 });
 
 router.post("/addPoints", async (req: Request, res: Response) => {
+  console.log("Ta aquiaaaaaaadsada");
   const {email, points} = req.body;
   const user_account = await user.findOne({
     email: email
@@ -618,17 +619,19 @@ router.post("/addPoints", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/getPoints", async (req: Request, res: Response) => {
-  const {email} = req.body;
-  const user_account = await user.findOne({
-    email: email
-  });
-  if (user_account) {
-    res.status(200).json({ points: user_account.points || 0 });
-  } else {
-    res.status(404).json({ message: "User not found!" });
+/////////////////////////////////////////////////////////////////////////////////////
+
+router.get("/leaderboard", async (req: Request, res: Response) => {
+  try {
+    const topUsers = await user.find({ points: { $gt: 0 } })
+      .sort({ points: -1 }) 
+      .limit(50)
+      .select('email profilePicture points');
+    res.status(200).json(topUsers); 
+  } catch (error) {
+    console.error("Error searching the leaderboard", error);
+    res.status(500).json({ message: "Error searching the leaderboard" });
   }
 });
-/////////////////////////////////////////////////////////////////////////////////////
 
 export default router;
